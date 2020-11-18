@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoreBolillero
 {
@@ -9,7 +10,7 @@ namespace CoreBolillero
         Bolillero bolillero = new Bolillero();
 
         
-        public bool jugar (List<byte> jugadas)
+        public bool jugar (List<byte> jugadas, Bolillero bolillero)
         {
             var comparar = 0;
             bolillero.Reingresar();
@@ -25,19 +26,33 @@ namespace CoreBolillero
 
             return true;
         }
-        public long jugarNveces(List<byte> jugadas, long cantJugar)
+        public long jugarNveces(List<byte> jugadas, long cantJugar, Bolillero bolillero)
         {
             long cantGanados = 0;
 
             for (long i = 0; i < cantJugar; i++)
             {
-                if (this.jugar(jugadas) ==  true)
+                if (this.jugar(jugadas, bolillero) ==  true)
                 {
                     cantGanados++;
                 }
             }
 
             return cantGanados;
+        }
+        public long simularSinHilos(List<byte> jugadas, long cantJugar, Bolillero bolillero)
+        {
+            return jugarNveces(jugadas, cantJugar, bolillero);
+        }
+        public long simularConHilos(List<byte> jugadas, long cantJugar, int cantHilos, Bolillero bolillero)
+        {
+            var vectorTarea = new Task<long>[cantHilos];
+            for (int i = 0; i < cantHilos; i++)
+            {
+                Bolillero clon = (Bolillero)bolillero.Clone();
+
+                vectorTarea[i] = Task.Run(() => jugarNveces(jugadas, cantJugar/cantHilos, clon));
+            }
         }
     }
 }

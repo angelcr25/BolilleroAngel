@@ -5,8 +5,9 @@ using System.Text;
 
 namespace CoreBolillero
 {
-    public class Bolillero
+    public class Bolillero : ICloneable
     {
+        
         public List<byte> adentro { get; set; }
         public List<byte> afuera { get; set; }
 
@@ -15,8 +16,13 @@ namespace CoreBolillero
         
         public Bolillero()
         {
-            var r = new Random();
+             r = new Random(DateTime.Now.Millisecond);
 
+        }
+        private Bolillero(Bolillero original) : this()
+        {
+            adentro = new List<byte>(original.adentro);
+            afuera = new List<byte>(original.afuera);
         }
 
         private void cargarBolillero(byte inicio, byte fin)
@@ -38,6 +44,11 @@ namespace CoreBolillero
         {
             adentro.AddRange(afuera);
             afuera.Clear();
+        }
+
+        public object Clone()
+        {
+            return new Bolillero(this);
         }
     }
 }
