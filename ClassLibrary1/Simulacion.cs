@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CoreBolillero
 {
@@ -47,12 +48,21 @@ namespace CoreBolillero
         public long simularConHilos(List<byte> jugadas, long cantJugar, int cantHilos, Bolillero bolillero)
         {
             var vectorTarea = new Task<long>[cantHilos];
-            for (int i = 0; i < cantHilos; i++)
+            long resto = cantJugar % cantHilos;
+
+            for (int i = 1; i < cantHilos; i++)
             {
                 Bolillero clon = (Bolillero)bolillero.Clone();
 
                 vectorTarea[i] = Task.Run(() => jugarNveces(jugadas, cantJugar/cantHilos, clon));
             }
+            Bolillero clon1 = (Bolillero)bolillero.Clone();
+
+            vectorTarea[0] = Task.Run(() => jugarNveces(jugadas, cantJugar / cantHilos + resto, clon1));
+
+            Task.WaitAll(vectorTarea);
+            return vectorTarea.Sum(T => T.Result);
+           
         }
     }
 }
