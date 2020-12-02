@@ -14,13 +14,14 @@ namespace CoreBolillero
         private Random r { get; set; }
 
         
-        public Bolillero()
+        public Bolillero(byte inicio, byte fin)
         {
              r = new Random(DateTime.Now.Millisecond);
-
+            this.cargarBolillero(inicio, fin);
         }
-        private Bolillero(Bolillero original) : this()
+        private Bolillero(Bolillero original)
         {
+            this.r = new Random();
             adentro = new List<byte>(original.adentro);
             afuera = new List<byte>(original.afuera);
         }
