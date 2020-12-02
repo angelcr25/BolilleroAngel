@@ -13,10 +13,10 @@ namespace CoreBolillero
         private Random r { get; set; }
 
         
-        public Bolillero()
+        public Bolillero(byte inicio, byte fin)
         {
             var r = new Random();
-
+            this.cargarBolillero(inicio, fin);
         }
 
         private void cargarBolillero(byte inicio, byte fin)
